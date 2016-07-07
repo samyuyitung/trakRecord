@@ -9,7 +9,7 @@
     <GridView
         android:id="@+id/badgeGrid"
         android:layout_width="match_parent"
-        android:layout_height="471dp"
+        android:layout_height="wrap_content"
         android:numColumns="3"
         android:gravity="center"
         android:stretchMode="columnWidth" >
@@ -19,7 +19,7 @@
         android:text="Add another camp!"
         android:layout_width="400dp"
         android:layout_height="wrap_content"
-        android:id="@+id/button" />
+        android:id="@+id/scanButton" />
     />
     <!-- More GUI components go here  -->
 

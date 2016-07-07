@@ -73,15 +73,13 @@ public class BaseActivity extends AppCompatActivity
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
-        Intent intent = null;
         Fragment fragment = null;
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
         if (id == R.id.nav_home) {
-            //fragment = new HomePage();
         } else if (id == R.id.nav_map) {
-            intent = new Intent(this, MyMap.class);
+
         } else if (id == R.id.nav_camps) {
             fragment = new CampFragment();
         } else if (id == R.id.nav_schedule) {
