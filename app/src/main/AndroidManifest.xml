@@ -19,24 +19,16 @@
         <activity
             android:name=".activity.BaseActivity"
             android:label="@string/app_name"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
-        <activity
-            android:name=".activity.Badges"
-            android:label="@string/title_activity_badges"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <activity
             android:name=".activity.MyMap"
             android:label="@string/title_activity_my_map"></activity>
-        <activity
-            android:name=".activity.Camp"
-            android:label="@string/title_activity_camp"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
 </manifest>

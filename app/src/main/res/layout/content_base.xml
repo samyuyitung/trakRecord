@@ -8,14 +8,4 @@
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context="soylente.com.trakrecord.activity.BaseActivity"
     tools:showIn="@layout/app_bar_base">
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Hello World!"
-        app:layout_constraintBottom_toBottomOf="@+id/content_base"
-        app:layout_constraintLeft_toLeftOf="@+id/content_base"
-        app:layout_constraintRight_toRightOf="@+id/content_base"
-        app:layout_constraintTop_toTopOf="@+id/content_base" />
-
 </android.support.constraint.ConstraintLayout>

@@ -1,8 +1,10 @@
 package soylente.com.trakrecord.activity;
 
+import android.app.Fragment;
+import android.app.FragmentManager;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -13,13 +15,11 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import soylente.com.trakrecord.R;
+import soylente.com.trakrecord.fragments.BadgeFragment;
+import soylente.com.trakrecord.fragments.CampFragment;
 
 public class BaseActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
-
-
-    private int currentFragment;
-    FragmentTransaction ft;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,6 +74,7 @@ public class BaseActivity extends AppCompatActivity
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         Intent intent = null;
+        Fragment fragment = null;
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
@@ -82,21 +83,24 @@ public class BaseActivity extends AppCompatActivity
         } else if (id == R.id.nav_map) {
             intent = new Intent(this, MyMap.class);
         } else if (id == R.id.nav_camps) {
-
+            fragment = new CampFragment();
         } else if (id == R.id.nav_schedule) {
 
         } else if (id == R.id.nav_stats) {
 
         } else if (id == R.id.nav_badges) {
-            intent = new Intent(this, Badges.class);
+            fragment = new BadgeFragment();
         }
-
-        // Insert the fragment by replacing any existing fragment
-        if(intent != null)
-        startActivity(intent);
+        if(fragment != null) {
+            // Insert the fragment by replacing any existing fragment
+            FragmentManager fragmentManager = getFragmentManager();
+            fragmentManager.beginTransaction()
+                    .replace(R.id.content_frame, fragment)
+                    .commit();
+            System.out.println("Starting frag");
+        }
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
-
 }
