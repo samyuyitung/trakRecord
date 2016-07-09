@@ -2,6 +2,8 @@ package soylente.com.trakrecord.fragments;
 
 
 import android.app.Fragment;
+import android.bluetooth.BluetoothAdapter;
+import android.bluetooth.BluetoothDevice;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,7 +11,11 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.GridView;
 
+import com.estimote.sdk.BeaconManager;
+import com.estimote.sdk.Nearable;
+
 import java.util.Arrays;
+import java.util.List;
 
 import soylente.com.trakrecord.Adaptor.ImageAdapter;
 import soylente.com.trakrecord.R;
@@ -19,18 +25,25 @@ import soylente.com.trakrecord.estimote.EstimoteCloudBeaconDetails;
 import soylente.com.trakrecord.estimote.EstimoteCloudBeaconDetailsFactory;
 import soylente.com.trakrecord.estimote.ProximityContentManager;
 
+
+//TODO: Camp images and shit, saying this is the camp unlock this badge
+
 public class BadgeFragment extends Fragment implements View.OnClickListener, ProximityContentManager.Listener {
     private Button scanButton;
     private ProximityContentManager proximityContentManager;
+    private GridView gridView;
+    private ImageAdapter iAdaptor;
+    private BluetoothAdapter mBluetoothAdapter;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
 
     }
 
     @Override
-    public View onCreateView (LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_badge,container,false);
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_badge, container, false);
 
         scanButton = (Button) view.findViewById(R.id.scanButton);
         scanButton.setOnClickListener(this);
@@ -43,8 +56,10 @@ public class BadgeFragment extends Fragment implements View.OnClickListener, Pro
                         new BeaconID("B9407230-F5F8-466E-AFF9-25556B57FE6D", 23105, 37595)),
                 new EstimoteCloudBeaconDetailsFactory());
         proximityContentManager.setListener(this);
-        GridView gridView = (GridView) view.findViewById(R.id.badgeGrid);
-        gridView.setAdapter(new ImageAdapter(view.getContext())); // uses the view to get the context instead of getActivity().
+        iAdaptor = new ImageAdapter(view.getContext());
+
+        gridView = (GridView) view.findViewById(R.id.badgeGrid);
+        gridView.setAdapter(iAdaptor); // uses the view to get the context instead of getActivity().
         return view;
     }
 
@@ -53,15 +68,18 @@ public class BadgeFragment extends Fragment implements View.OnClickListener, Pro
         super.onActivityCreated(savedInstanceState);
     }
 
-    @Override
-    public void onClick(View v) {
-        scanForBeacon();
+    void startScanning() {
+
+        if(mBluetoothAdapter != null && mBluetoothAdapter.isEnabled())
+            proximityContentManager.startContentUpdates();
     }
 
-    void scanForBeacon(){
-        System.out.println("Scanning!");
-        proximityContentManager.startContentUpdates();
+
+    @Override
+    public void onClick(View v) {
+        startScanning();
     }
+
     @Override
     public void onContentChanged(Object content) {
 
@@ -70,7 +88,13 @@ public class BadgeFragment extends Fragment implements View.OnClickListener, Pro
             BeaconStats bs = new BeaconStats();
             //Read beacon info
             bs = bs.grabById(beaconDetails.getId());
+            unlockCamp(bs.getCampNumber());
+            proximityContentManager.stopContentUpdates();
         }
-        proximityContentManager.stopContentUpdates();
     }
+
+    private void unlockCamp(int campNumber) {
+        iAdaptor.getItem(campNumber).setImageResource(R.drawable.ic_media_play);
+    }
+
 }

@@ -10,6 +10,7 @@ import android.widget.LinearLayout;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -28,7 +29,7 @@ import soylente.com.trakrecord.R;
  * Created by sam on 2016-06-29.
  */
 
-public class MapaFragment extends SupportMapFragment implements OnMapReadyCallback {
+public class MapaFragment extends MapFragment implements OnMapReadyCallback {
 
     MapView mapView;
     List<Camp> camps = new ArrayList<>();

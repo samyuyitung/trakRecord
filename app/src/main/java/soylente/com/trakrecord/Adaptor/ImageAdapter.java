@@ -1,12 +1,13 @@
 package soylente.com.trakrecord.Adaptor;
 
 import android.content.Context;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.GridView;
 import android.widget.ImageView;
+
+import java.util.ArrayList;
 
 import soylente.com.trakrecord.R;
 
@@ -14,8 +15,33 @@ import soylente.com.trakrecord.R;
  * Created by sam on 2016-07-06.
  */
 public class ImageAdapter extends BaseAdapter {
-
     private Context mContext;
+
+    private Integer[] mThumbIds = {
+            R.drawable.ic_media_pause,
+            R.drawable.ic_media_pause,
+            R.drawable.ic_media_pause,
+            R.drawable.ic_media_pause,
+            R.drawable.ic_media_pause,
+            R.drawable.ic_media_pause,
+            R.drawable.ic_media_pause,
+            R.drawable.ic_media_pause
+    };
+    private ArrayList<ImageView> mImageViewArrayList = new ArrayList<>(mThumbIds.length);
+
+    private Integer[] foundImages = {
+            R.drawable.ic_media_play,
+            R.drawable.ic_media_play,
+            R.drawable.ic_media_play,
+            R.drawable.ic_media_play,
+            R.drawable.ic_media_play,
+            R.drawable.ic_media_play,
+            R.drawable.ic_media_play,
+            R.drawable.ic_media_play,
+            R.drawable.ic_media_play,
+            R.drawable.ic_media_play
+    };
+
 
     public ImageAdapter(Context c) {
         mContext = c;
@@ -25,8 +51,8 @@ public class ImageAdapter extends BaseAdapter {
         return mThumbIds.length;
     }
 
-    public Object getItem(int position) {
-        return null;
+    public ImageView getItem(int position) {
+        return mImageViewArrayList.get(position);
     }
 
     public long getItemId(int position) {
@@ -43,20 +69,8 @@ public class ImageAdapter extends BaseAdapter {
         } else {
             imageView = (ImageView) convertView;
         }
-
         imageView.setImageResource(mThumbIds[position]);
+
         return imageView;
     }
-
-    private Integer[] mThumbIds = {
-            R.drawable.ic_media_pause, R.drawable.ic_media_play,
-            R.drawable.ic_media_pause, R.drawable.ic_media_play,
-            R.drawable.ic_media_pause, R.drawable.ic_media_play,
-            R.drawable.ic_media_pause, R.drawable.ic_media_play,
-            R.drawable.ic_media_pause, R.drawable.ic_media_play,
-            R.drawable.ic_media_pause, R.drawable.ic_media_play,
-            R.drawable.ic_media_pause, R.drawable.ic_media_play,
-            R.drawable.ic_media_pause, R.drawable.ic_media_play,
-            R.drawable.ic_media_pause, R.drawable.ic_media_play,
-    };
 }

@@ -30,6 +30,7 @@ public class NearestBeaconManager {
         this.beaconIDs = beaconIDs;
 
         beaconManager = new BeaconManager(context);
+        beaconManager.setForegroundScanPeriod(5000,5000);
         beaconManager.setRangingListener(new BeaconManager.RangingListener() {
             @Override
             public void onBeaconsDiscovered(Region region, List<Beacon> list) {

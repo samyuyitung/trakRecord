@@ -14,9 +14,12 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.google.android.gms.maps.MapFragment;
+
 import soylente.com.trakrecord.R;
 import soylente.com.trakrecord.fragments.BadgeFragment;
 import soylente.com.trakrecord.fragments.CampFragment;
+import soylente.com.trakrecord.fragments.MapaFragment;
 
 public class BaseActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -79,7 +82,7 @@ public class BaseActivity extends AppCompatActivity
 
         if (id == R.id.nav_home) {
         } else if (id == R.id.nav_map) {
-
+            fragment = new MapaFragment();
         } else if (id == R.id.nav_camps) {
             fragment = new CampFragment();
         } else if (id == R.id.nav_schedule) {
