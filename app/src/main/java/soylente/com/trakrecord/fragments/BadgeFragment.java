@@ -72,6 +72,7 @@ public class BadgeFragment extends Fragment implements View.OnClickListener, Pro
 
         if(mBluetoothAdapter != null && mBluetoothAdapter.isEnabled())
             proximityContentManager.startContentUpdates();
+        unlockCamp(2);
     }
 
 

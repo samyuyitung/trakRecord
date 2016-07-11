@@ -1,21 +1,19 @@
 package soylente.com.trakrecord.fragments;
 
+import android.app.Fragment;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
-
+import android.widget.RelativeLayout;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.MapsInitializer;
-import com.google.android.gms.maps.OnMapReadyCallback;
-import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
 
@@ -25,88 +23,59 @@ import java.util.List;
 import soylente.com.trakrecord.DAO.Camp;
 import soylente.com.trakrecord.R;
 
-/**
- * Created by sam on 2016-06-29.
- */
+public class MapsFragment extends Fragment {
 
-public class MapaFragment extends MapFragment implements OnMapReadyCallback {
-
-    MapView mapView;
+    MapView mMapView;
+    private GoogleMap googleMap;
     List<Camp> camps = new ArrayList<>();
-    GoogleMap mMap;
     private float[] pinColours = {BitmapDescriptorFactory.HUE_BLUE, BitmapDescriptorFactory.HUE_CYAN, BitmapDescriptorFactory.HUE_GREEN, BitmapDescriptorFactory.HUE_MAGENTA, BitmapDescriptorFactory.HUE_RED, BitmapDescriptorFactory.HUE_ROSE, BitmapDescriptorFactory.HUE_VIOLET, BitmapDescriptorFactory.HUE_YELLOW};
     private int[] routeColours = {Color.BLUE, Color.CYAN, Color.GREEN, Color.MAGENTA, Color.RED};
 
 
     @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        MapsInitializer.initialize(getActivity());
-
-        if (mapView != null) {
-            mapView.onCreate(savedInstanceState);
-        }
-        initializeMap();
-    }
-
-    private void initializeMap() {
-        if (mMap == null) {
-            mapView = (MapView) getActivity().findViewById(R.id.map);
-            mapView.getMapAsync(this);
-            //setup markers etc...
-        }
-    }
-
-    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        final LinearLayout parent = (LinearLayout) inflater.inflate(R.layout.fragment_map, container, false);
-        mapView = (MapView) parent.findViewById(R.id.map);
-        return parent;
-    }
+        // inflat and return the layout
+        View v = inflater.inflate(R.layout.fragment_map, container,
+                false);
+        mMapView = (MapView) v.findViewById(R.id.mapView);
+        mMapView.onCreate(savedInstanceState);
 
-    @Override
-    public void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        mapView.onSaveInstanceState(outState);
+        mMapView.onResume();// needed to get the map to display immediately
+
+        try {
+            MapsInitializer.initialize(getActivity().getApplicationContext());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        googleMap = mMapView.getMap();
+        populateMap(googleMap);
+        return v;
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        mapView.onResume();
-        initializeMap();
+        mMapView.onResume();
     }
 
     @Override
     public void onPause() {
         super.onPause();
-        mapView.onPause();
+        mMapView.onPause();
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-        mapView.onDestroy();
+        mMapView.onDestroy();
     }
 
     @Override
     public void onLowMemory() {
         super.onLowMemory();
-        mapView.onLowMemory();
-    }
-
-
-    @Override
-    public void onMapReady(GoogleMap googleMap) {
-        populateMap(mMap);
-        mMap.getUiSettings().setMyLocationButtonEnabled(false);
-        try {
-            mMap.setMyLocationEnabled(true);
-        } catch (SecurityException e) {
-        }
-        mMap.getUiSettings().setZoomControlsEnabled(true);
-
+        mMapView.onLowMemory();
     }
 
     private void populateMap(GoogleMap googleMap) {
@@ -133,7 +102,6 @@ public class MapaFragment extends MapFragment implements OnMapReadyCallback {
         }
     }
 
-
     private void getCamps() {
     /*        Firebase ref = new Firebase("https://trakrecord.firebaseio.com/Camps");
         // Attach an listener to read the data at our posts reference
@@ -159,5 +127,4 @@ public class MapaFragment extends MapFragment implements OnMapReadyCallback {
         camps.add(new Camp("3nd", 43.662827, -79.409837));
         camps.add(new Camp("4nd", 43.647667, -79.414318));
     }
-
 }

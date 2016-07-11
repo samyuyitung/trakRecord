@@ -1,26 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:background="#7bae16">
+    android:background="#7bae16"
+    android:orientation="vertical"
+    android:layout_marginTop="?attr/actionBarSize"
+    android:weightSum="1">
 
-    <GridView
-        android:id="@+id/badgeGrid"
+    <LinearLayout
+        android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:numColumns="3"
-        android:gravity="center"
-        android:stretchMode="columnWidth" >
-    </GridView>
+        android:layout_height="match_parent">
 
-    <Button
-        android:text="Add another camp!"
-        android:layout_width="400dp"
-        android:layout_height="wrap_content"
-        android:id="@+id/scanButton" />
-    />
-    <!-- More GUI components go here  -->
+        <GridView
+            android:id="@+id/badgeGrid"
+            android:layout_width="match_parent"
+            android:layout_height="400dp"
+            android:gravity="center"
+            android:numColumns="3"
+            android:stretchMode="columnWidth"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentStart="true"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="20dp"
+            ></GridView>
 
-</LinearLayout>
+        <Button
+            android:id="@+id/scanButton"
+            android:layout_width="wrap_content"
+            android:layout_height="100dp"
+            android:layout_gravity="center_horizontal"
+            android:text="Add another camp!"
+            android:layout_marginBottom="10dp"/>
+
+    </LinearLayout>
+
+</RelativeLayout>
