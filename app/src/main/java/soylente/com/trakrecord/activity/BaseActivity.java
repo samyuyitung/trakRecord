@@ -15,17 +15,21 @@ import android.view.MenuItem;
 import soylente.com.trakrecord.R;
 import soylente.com.trakrecord.fragments.BadgeFragment;
 import soylente.com.trakrecord.fragments.CampFragment;
+import soylente.com.trakrecord.fragments.HomeFragment;
 import soylente.com.trakrecord.fragments.MapsFragment;
 
 public class BaseActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
+
+    private  FragmentManager fragmentManager;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_base);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         //setSupportActionBar(toolbar);
+
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -35,6 +39,8 @@ public class BaseActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+        loadFragment(new HomeFragment());
 
     }
     @Override
@@ -77,6 +83,7 @@ public class BaseActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.nav_home) {
+            fragment = new HomeFragment();
         } else if (id == R.id.nav_map) {
             fragment = new MapsFragment();
         } else if (id == R.id.nav_camps) {
@@ -88,16 +95,20 @@ public class BaseActivity extends AppCompatActivity
         } else if (id == R.id.nav_badges) {
             fragment = new BadgeFragment();
         }
+        loadFragment(fragment);
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        drawer.closeDrawer(GravityCompat.START);
+        return true;
+    }
+
+    void loadFragment(Fragment fragment){
         if(fragment != null) {
             // Insert the fragment by replacing any existing fragment
-            FragmentManager fragmentManager = getFragmentManager();
+            fragmentManager = getFragmentManager();
             fragmentManager.beginTransaction()
                     .replace(R.id.content_frame, fragment)
                     .commit();
             System.out.println("Starting frag");
         }
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        drawer.closeDrawer(GravityCompat.START);
-        return true;
     }
 }

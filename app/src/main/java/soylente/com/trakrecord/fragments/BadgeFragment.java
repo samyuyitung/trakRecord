@@ -2,12 +2,14 @@ package soylente.com.trakrecord.fragments;
 
 
 import android.app.Fragment;
+import android.app.FragmentManager;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.GridView;
 
@@ -34,6 +36,7 @@ public class BadgeFragment extends Fragment implements View.OnClickListener, Pro
     private GridView gridView;
     private ImageAdapter iAdaptor;
     private BluetoothAdapter mBluetoothAdapter;
+    private FragmentManager fragmentManager;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -60,6 +63,19 @@ public class BadgeFragment extends Fragment implements View.OnClickListener, Pro
 
         gridView = (GridView) view.findViewById(R.id.badgeGrid);
         gridView.setAdapter(iAdaptor); // uses the view to get the context instead of getActivity().
+        gridView.setOnItemClickListener(new AdapterView.OnItemClickListener(){
+
+            @Override
+            public void onItemClick(AdapterView<?> parent, View v, int position,
+                                    long id) {
+                CampFragment campFrag = new CampFragment();
+                fragmentManager = getFragmentManager();
+                fragmentManager.beginTransaction()
+                        .replace(R.id.content_frame, campFrag)
+                        .commit();
+                System.out.println("Starting frag");
+            }
+        });
         return view;
     }
 
@@ -95,7 +111,8 @@ public class BadgeFragment extends Fragment implements View.OnClickListener, Pro
     }
 
     private void unlockCamp(int campNumber) {
-        iAdaptor.getItem(campNumber).setImageResource(R.drawable.ic_media_play);
+        iAdaptor.updateImage(campNumber, 1);
+        iAdaptor.notifyDataSetChanged();
     }
 
 }

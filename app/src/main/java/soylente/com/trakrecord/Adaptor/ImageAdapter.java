@@ -16,31 +16,19 @@ import soylente.com.trakrecord.R;
  */
 public class ImageAdapter extends BaseAdapter {
     private Context mContext;
-
-    private Integer[] mThumbIds = {
-            R.drawable.ic_media_pause,
-            R.drawable.ic_media_pause,
-            R.drawable.ic_media_pause,
-            R.drawable.ic_media_pause,
-            R.drawable.ic_media_pause,
-            R.drawable.ic_media_pause,
-            R.drawable.ic_media_pause,
-            R.drawable.ic_media_pause
+    int notSelected = R.drawable.ic_media_pause;
+    int selected = R.drawable.ic_media_play;
+    Integer[] mThumbIds = { notSelected,
+                                    notSelected,
+                                    notSelected,
+                                    notSelected,
+                                    notSelected,
+                                    notSelected,
+                                    notSelected,
+                                    notSelected,
+                                    notSelected,
     };
     private ArrayList<ImageView> mImageViewArrayList = new ArrayList<>(mThumbIds.length);
-
-    private Integer[] foundImages = {
-            R.drawable.ic_media_play,
-            R.drawable.ic_media_play,
-            R.drawable.ic_media_play,
-            R.drawable.ic_media_play,
-            R.drawable.ic_media_play,
-            R.drawable.ic_media_play,
-            R.drawable.ic_media_play,
-            R.drawable.ic_media_play,
-            R.drawable.ic_media_play,
-            R.drawable.ic_media_play
-    };
 
 
     public ImageAdapter(Context c) {
@@ -57,6 +45,17 @@ public class ImageAdapter extends BaseAdapter {
 
     public long getItemId(int position) {
         return 0;
+    }
+
+    public void updateImage(int position, int toggle){
+        switch (toggle){
+            case 0:
+                mThumbIds[position] = notSelected;
+                break;
+            case 1:
+                mThumbIds[position] = selected;
+                break;
+        }
     }
 
     public View getView(int position, View convertView, ViewGroup parent) {
