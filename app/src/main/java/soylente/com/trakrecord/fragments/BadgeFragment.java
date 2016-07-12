@@ -114,5 +114,4 @@ public class BadgeFragment extends Fragment implements View.OnClickListener, Pro
         iAdaptor.updateImage(campNumber, 1);
         iAdaptor.notifyDataSetChanged();
     }
-
 }
