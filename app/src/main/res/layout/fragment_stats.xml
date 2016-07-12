@@ -12,11 +12,19 @@
         android:id="@+id/distance_label"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="16dp"/>
+        android:textSize="25dp"/>
 
     <TextView
         android:id="@+id/steps_label"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="16dp"/>
+        android:textSize="25dp"/>
+
+    <ToggleButton
+        android:paddingTop="50dp"
+        android:text="Track Stats"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/toggle_reading" />
+
 </LinearLayout>

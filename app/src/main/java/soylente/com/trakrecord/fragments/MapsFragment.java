@@ -89,7 +89,6 @@ public class MapsFragment extends Fragment {
                 if (camps.indexOf(c) != 4)
                     googleMap.addPolyline(new PolylineOptions()
                             .add(c.getCoords(), camps.get((camps.indexOf(c) + 1) % camps.size()).getCoords())
-
                             .width(10)
                             .color(routeColours[camps.indexOf(c)])
                             .geodesic(true));

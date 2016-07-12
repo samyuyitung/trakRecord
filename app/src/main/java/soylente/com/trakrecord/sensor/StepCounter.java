@@ -26,16 +26,20 @@ public class StepCounter implements SensorEventListener {
         mContext = c;
         mSensorManager = (SensorManager) mContext.getSystemService(SENSOR_SERVICE);
         sensor = mSensorManager.getDefaultSensor(Sensor.TYPE_STEP_COUNTER);
+        totalSteps = 0;
     }
 
-    public long getTotalSteps (){return totalSteps; }
+    public long getTotalSteps (){ return totalSteps; }
 
     @Override
     public void onSensorChanged(SensorEvent event) {
         totalSteps = (int)event.values[0];
-        TextView txtView = (TextView) ((Activity)mContext).findViewById(R.id.steps_label);
-        txtView.setText("Steps: " + totalSteps);
+        updateLabel(totalSteps);
+    }
+    private void updateLabel(int steps){
 
+        TextView txtView = (TextView) ((Activity)mContext).findViewById(R.id.steps_label);
+        txtView.setText("Walked: " + steps + " Steps");
     }
 
     @Override

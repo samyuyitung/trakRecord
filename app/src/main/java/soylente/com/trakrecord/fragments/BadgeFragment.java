@@ -26,9 +26,8 @@ import soylente.com.trakrecord.estimote.ProximityContentManager;
 //TODO: Camp images and shit, saying this is the camp unlock this badge
 
 public class BadgeFragment extends Fragment implements View.OnClickListener, ProximityContentManager.Listener {
-    private Button scanButton;
     private ProximityContentManager proximityContentManager;
-    private GridView gridView;
+
     private ImageAdapter iAdaptor;
     private BluetoothAdapter mBluetoothAdapter;
     private FragmentManager fragmentManager;
@@ -44,7 +43,7 @@ public class BadgeFragment extends Fragment implements View.OnClickListener, Pro
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_badge, container, false);
 
-        scanButton = (Button) view.findViewById(R.id.scanButton);
+        Button scanButton = (Button) view.findViewById(R.id.scanButton);
         scanButton.setOnClickListener(this);
 
         proximityContentManager = new ProximityContentManager(this.getActivity(),
@@ -57,7 +56,7 @@ public class BadgeFragment extends Fragment implements View.OnClickListener, Pro
         proximityContentManager.setListener(this);
         iAdaptor = new ImageAdapter(view.getContext());
 
-        gridView = (GridView) view.findViewById(R.id.badgeGrid);
+        GridView gridView = (GridView) view.findViewById(R.id.badgeGrid);
         gridView.setAdapter(iAdaptor); // uses the view to get the context instead of getActivity().
         gridView.setOnItemClickListener(new AdapterView.OnItemClickListener(){
 
@@ -79,7 +78,7 @@ public class BadgeFragment extends Fragment implements View.OnClickListener, Pro
         super.onActivityCreated(savedInstanceState);
     }
 
-    void startScanning() {
+    private void startScanning() {
 
         if(mBluetoothAdapter != null && mBluetoothAdapter.isEnabled())
             proximityContentManager.startContentUpdates();

@@ -18,14 +18,12 @@ import soylente.com.trakrecord.fragments.CampFragment;
 import soylente.com.trakrecord.fragments.HomeFragment;
 import soylente.com.trakrecord.fragments.MapsFragment;
 import soylente.com.trakrecord.fragments.StatsFragment;
-import soylente.com.trakrecord.sensor.StepCounter;
 
 public class BaseActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
 
     private  FragmentManager fragmentManager;
-    StepCounter stepCounter;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -41,7 +39,6 @@ public class BaseActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-        stepCounter = new StepCounter(this);
         loadFragment(new HomeFragment());
 
     }
@@ -104,7 +101,7 @@ public class BaseActivity extends AppCompatActivity
         return true;
     }
 
-    void loadFragment(Fragment fragment){
+    private void loadFragment(Fragment fragment){
         if(fragment != null) {
             // Insert the fragment by replacing any existing fragment
             fragmentManager = getFragmentManager();
