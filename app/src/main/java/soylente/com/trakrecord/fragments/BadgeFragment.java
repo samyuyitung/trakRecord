@@ -4,7 +4,6 @@ package soylente.com.trakrecord.fragments;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.bluetooth.BluetoothAdapter;
-import android.bluetooth.BluetoothDevice;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,11 +12,7 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.GridView;
 
-import com.estimote.sdk.BeaconManager;
-import com.estimote.sdk.Nearable;
-
 import java.util.Arrays;
-import java.util.List;
 
 import soylente.com.trakrecord.Adaptor.ImageAdapter;
 import soylente.com.trakrecord.R;
@@ -41,6 +36,7 @@ public class BadgeFragment extends Fragment implements View.OnClickListener, Pro
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+        getActivity().setTitle("B-B-B-Badges!");
 
     }
 
@@ -73,7 +69,6 @@ public class BadgeFragment extends Fragment implements View.OnClickListener, Pro
                 fragmentManager.beginTransaction()
                         .replace(R.id.content_frame, campFrag)
                         .commit();
-                System.out.println("Starting frag");
             }
         });
         return view;

@@ -11,6 +11,10 @@ import soylente.com.trakrecord.R;
 
 public class CampFragment extends Fragment {
 
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+    }
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {

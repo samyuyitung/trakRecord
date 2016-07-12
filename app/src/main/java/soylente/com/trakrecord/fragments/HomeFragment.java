@@ -1,8 +1,6 @@
 package soylente.com.trakrecord.fragments;
 
 import android.app.Fragment;
-import android.content.Context;
-import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,6 +10,11 @@ import soylente.com.trakrecord.R;
 
 public class HomeFragment extends Fragment {
 
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        getActivity().setTitle("Home (where the <3 is)");
+    }
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {

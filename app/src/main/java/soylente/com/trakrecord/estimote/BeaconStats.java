@@ -14,8 +14,8 @@ public class BeaconStats {
     public BeaconStats(){}
 
 
-    public BeaconStats(int mileMarker, String beaconType){
-        this.campNumber = mileMarker;
+    public BeaconStats(int campNumber, String beaconType){
+        this.campNumber = campNumber;
         this.beaconType = beaconType;
     }
 

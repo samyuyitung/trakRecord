@@ -82,7 +82,6 @@ public class MapsFragment extends Fragment {
         getCamps();
         if (!camps.isEmpty()) {
             for (Camp c : camps) {
-                System.out.println(c.getCampName() + "  " + c.getCoords());
                 googleMap.addMarker(new MarkerOptions()
                         .position(c.getCoords())
                         .title(c.getCampName())

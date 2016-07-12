@@ -17,18 +17,20 @@ import soylente.com.trakrecord.fragments.BadgeFragment;
 import soylente.com.trakrecord.fragments.CampFragment;
 import soylente.com.trakrecord.fragments.HomeFragment;
 import soylente.com.trakrecord.fragments.MapsFragment;
+import soylente.com.trakrecord.fragments.StatsFragment;
+import soylente.com.trakrecord.sensor.StepCounter;
 
 public class BaseActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
 
     private  FragmentManager fragmentManager;
+    StepCounter stepCounter;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_base);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        //setSupportActionBar(toolbar);
 
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -39,7 +41,7 @@ public class BaseActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-
+        stepCounter = new StepCounter(this);
         loadFragment(new HomeFragment());
 
     }
@@ -91,11 +93,12 @@ public class BaseActivity extends AppCompatActivity
         } else if (id == R.id.nav_schedule) {
 
         } else if (id == R.id.nav_stats) {
-
+            fragment = new StatsFragment();
         } else if (id == R.id.nav_badges) {
             fragment = new BadgeFragment();
         }
         loadFragment(fragment);
+        this.setTitle("Camps!");
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;

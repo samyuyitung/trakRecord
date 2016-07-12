@@ -80,9 +80,8 @@ public class ImageAdapter extends BaseAdapter {
             grid = inflater.inflate(R.layout.badge_list, null);
             TextView tv = (TextView) grid.findViewById(R.id.badge_label);
             tv.setText(mLabels[position]);
-
         } else {
-            grid = (View) convertView;
+            grid = convertView;
         }
 
 
