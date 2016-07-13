@@ -12,6 +12,9 @@ import android.app.Activity;
 import android.content.Context;
 import android.util.Log;
 import android.widget.TextView;
+
+import com.google.android.gms.maps.model.LatLng;
+
 import soylente.com.trakrecord.R;
 
 import static android.content.Context.LOCATION_SERVICE;
@@ -22,23 +25,32 @@ public class DistanceCalculator implements LocationListener {
     private Context mContext;
     private double totalDistance;
     private Location previousLocation = null;
+
+
     public DistanceCalculator(Context c) {
         mContext = c;
         mLocationManager = (LocationManager) mContext.getSystemService(LOCATION_SERVICE);
         totalDistance = 0;
     }
 
-    public double getTotalDistance() {return totalDistance; }
+    public double getTotalDistance() {
+        return totalDistance;
+    }
 
-    private void updateLabel(Double distance){
+    public LatLng getCurrentCoords() {
+        return new LatLng(previousLocation.getLatitude(), previousLocation.getLongitude());
+    }
+
+    private void updateLabel(Double distance) {
 
         TextView txtView = (TextView) ((Activity) mContext).findViewById(R.id.distance_label);
-        txtView.setText( "Distance: " + String.format( "%.2f", distance )+ "m" );
+        txtView.setText("Distance: " + String.format("%.2f", distance) + "m");
     }
+
     @Override
     public void onLocationChanged(Location currentLocation) {
         if (currentLocation != null)
-                totalDistance += previousLocation.distanceTo(currentLocation);
+            totalDistance += previousLocation.distanceTo(currentLocation);
         updateLabel(totalDistance);
         previousLocation = currentLocation;
     }
@@ -109,7 +121,6 @@ public class DistanceCalculator implements LocationListener {
                 // if GPS Enabled get lat/long using GPS Services
                 if (isGPSEnabled) {
                     if (location == null) {
-                        mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,1000,1, this);
                         Log.d("GPS", "GPS Enabled");
                         if (mLocationManager != null)
                             location = mLocationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);

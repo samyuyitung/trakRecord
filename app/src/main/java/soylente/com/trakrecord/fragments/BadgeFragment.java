@@ -1,10 +1,11 @@
 package soylente.com.trakrecord.fragments;
 
 
-import android.app.Fragment;
-import android.app.FragmentManager;
 import android.bluetooth.BluetoothAdapter;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -35,10 +36,8 @@ public class BadgeFragment extends Fragment implements View.OnClickListener, Pro
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
-        getActivity().setTitle("B-B-B-Badges!");
 
     }
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_badge, container, false);
@@ -76,6 +75,7 @@ public class BadgeFragment extends Fragment implements View.OnClickListener, Pro
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+
     }
 
     private void startScanning() {

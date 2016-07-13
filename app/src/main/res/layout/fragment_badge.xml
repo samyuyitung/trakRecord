@@ -22,7 +22,7 @@
     <Button
         android:id="@+id/scanButton"
         android:layout_width="wrap_content"
-        android:layout_height="100dp"
+        android:layout_height="60dp"
         android:layout_gravity="center_horizontal"
         android:layout_marginBottom="10dp"
         android:text="Add another camp!" />

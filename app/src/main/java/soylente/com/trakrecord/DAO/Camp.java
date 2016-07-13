@@ -12,10 +12,6 @@ public class Camp {
     private double latitude;
     private double longitude;
     private LatLng coords;
-
-    public Camp(){
-
-    }
     public Camp(String name, double lat, double lng) {
         campName = name;
         latitude = lat;
@@ -29,6 +25,7 @@ public class Camp {
     }
     public double getLatitude() {return  latitude; }
     public double getLongitude() {return  longitude; }
+
     public LatLng getCoords() {
         if(coords == null)  
             coords = new LatLng(latitude, longitude);

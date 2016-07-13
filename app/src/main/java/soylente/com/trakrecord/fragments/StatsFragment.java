@@ -1,8 +1,8 @@
 package soylente.com.trakrecord.fragments;
 
-
-import android.app.Fragment;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -32,7 +32,11 @@ public class StatsFragment extends Fragment {
         super.onCreate(savedInstanceState);
         stepCounter = new StepCounter(getActivity());
         distanceCalculator = new DistanceCalculator(getActivity());
-        getActivity().setTitle("Statistics");
+
+    }
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
 
     }
 
