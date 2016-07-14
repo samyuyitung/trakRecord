@@ -3,16 +3,17 @@ package soylente.com.trakrecord.fragments;
 
 import android.location.Location;
 import android.location.LocationListener;
-import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
 
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
@@ -22,44 +23,70 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import soylente.com.trakrecord.DAO.Camp;
 import soylente.com.trakrecord.R;
 
-import static android.content.Context.LOCATION_SERVICE;
 
 public class CampFragment extends Fragment implements OnMapReadyCallback {
 
     private Location mLocation;
     private MapView campMap;
     private Camp camp;
-    private final LocationListener mLocationListener = new LocationListener() {
-        @Override
-        public void onLocationChanged(final Location location) {
-            mLocation = location;
-        }
+    private Location campLoc;
+    TextView distanceFrom;
 
-        @Override
-        public void onStatusChanged(String s, int i, Bundle bundle) {
-        }
+    private GoogleApiClient mGoogleApiClient;
+    private LocationRequest mLocationRequest;
+    private com.google.android.gms.location.LocationListener mLocationListener;
 
-        @Override
-        public void onProviderDisabled(String arg0) {
-        }
-
-        @Override
-        public void onProviderEnabled(String arg0) {
-        }
-    };
-
+    private long UPDATE_INTERVAL = 2000;  /* 10 secs */
+    private long FASTEST_INTERVAL = 100; /* 2 sec */
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        camp = (Camp) getArguments().getParcelable("CAMP");
+        campLoc = new Location("");
+        campLoc.setLatitude(camp.getLatitude());
+        campLoc.setLongitude(camp.getLongitude());
 
-        camp = new Camp("1st", 43.650842, -79.373020);
-        LocationManager mLocationManager = (LocationManager) getActivity().getSystemService(LOCATION_SERVICE);
-        try {
-            mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, mLocationListener);
-            mLocation = mLocationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
-        } catch (SecurityException e) {
-        }
+        mLocationListener = new com.google.android.gms.location.LocationListener() {
+
+            @Override
+            public void onLocationChanged(Location currentLocation) {
+                mLocation = currentLocation;
+            }
+        };
+
+        mGoogleApiClient = new GoogleApiClient.Builder(getActivity())
+                .addApi(LocationServices.API)
+                .addConnectionCallbacks(new GoogleApiClient.ConnectionCallbacks() {
+
+                    @Override
+                    public void onConnected(Bundle arg0) {
+                        // Get last known recent location.
+                        try {
+                            mLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
+                            startLocationUpdates();
+                        } catch (SecurityException e) {
+                        }
+                    }
+
+                    @Override
+                    public void onConnectionSuspended(int i) {
+
+                    }
+                }).build();
+        mGoogleApiClient.connect();
     }
+
+    protected void startLocationUpdates() throws SecurityException {
+        // Create the location request
+        mLocationRequest = LocationRequest.create()
+                .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
+                .setInterval(UPDATE_INTERVAL)
+                .setFastestInterval(FASTEST_INTERVAL);
+        // Request location updates
+        LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient,
+                mLocationRequest, mLocationListener);
+    }
+
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
@@ -72,14 +99,15 @@ public class CampFragment extends Fragment implements OnMapReadyCallback {
 
         View view = inflater.inflate(R.layout.fragment_camp, container, false);
         TextView title = (TextView) view.findViewById(R.id.camp_title);
+        distanceFrom = (TextView) view.findViewById(R.id.distance_label);
         title.setText(camp.getCampName());
-        TextView distanceFrom = (TextView) view.findViewById(R.id.camp_distance_label);
-        setDistanceFrom(distanceFrom);
         campMap = (MapView) view.findViewById(R.id.camp_view);
         campMap.onCreate(savedInstanceState);
         campMap.getMapAsync(this);
+        setDistanceFrom();
 
         return view;
+
     }
 
     @Override
@@ -87,20 +115,27 @@ public class CampFragment extends Fragment implements OnMapReadyCallback {
         googleMap.addMarker(new MarkerOptions()
                 .position(camp.getCoords()));
 
-        googleMap.moveCamera(CameraUpdateFactory.zoomTo(20));
+        googleMap.moveCamera(CameraUpdateFactory.zoomTo(16));
         googleMap.moveCamera(CameraUpdateFactory.newLatLng(camp.getCoords()));
         campMap.onResume();
     }
 
-    void setDistanceFrom(TextView distanceFrom) {
+    void setDistanceFrom() {
         float distance = -12;
-        Location campLoc = new Location("");
-        campLoc.setLatitude(camp.getLatitude());
-        campLoc.setLongitude(camp.getLongitude());
-        if(mLocation != null && camp.getCoords() != null)
-            distance = mLocation.distanceTo(campLoc);
-        distanceFrom.setText("Distance from: " + distance + " km");
+        if (mLocation != null && camp.getCoords() != null)
+            distance = mLocation.distanceTo(campLoc) / 1000;
+       // distanceFrom.setText("Distance from: " + distance + " km");
     }
 
+    @Override
+    public void onPause(){
+        super.onPause();
+
+        LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, mLocationListener);
+
+        if (mGoogleApiClient != null)
+            mGoogleApiClient.disconnect();
+
+    }
 
 }

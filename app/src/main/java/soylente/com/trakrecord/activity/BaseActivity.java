@@ -12,7 +12,18 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
+
+import com.firebase.client.DataSnapshot;
+import com.firebase.client.Firebase;
+import com.firebase.client.FirebaseError;
+import com.firebase.client.ValueEventListener;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import soylente.com.trakrecord.DAO.Camp;
 import soylente.com.trakrecord.R;
+
 import soylente.com.trakrecord.fragments.BadgeFragment;
 import soylente.com.trakrecord.fragments.CampFragment;
 import soylente.com.trakrecord.fragments.HomeFragment;
@@ -22,8 +33,7 @@ import soylente.com.trakrecord.fragments.StatsFragment;
 public class BaseActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
-
-
+    ArrayList<Camp> camps = new ArrayList<>();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -39,8 +49,34 @@ public class BaseActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+        Firebase.setAndroidContext(this);
+        loadFirebase();
         loadFragment(new HomeFragment());
 
+
+    }
+
+    private void loadFirebase() {
+        Firebase ref = new Firebase("https://trakrecord.firebaseio.com/Camps");
+        // Attach an listener to read the data at our posts reference
+        ref.addValueEventListener(new ValueEventListener() {
+                                      @Override
+                                      public void onDataChange(DataSnapshot snapshot) {
+                                          System.out.println("There are " + snapshot.getChildrenCount() + " camps");
+                                          for (DataSnapshot postSnapshot : snapshot.getChildren()) {
+                                              camps.add(postSnapshot.getValue(Camp.class));
+
+                                          }
+                                      }
+
+                                      @Override
+                                      public void onCancelled(FirebaseError firebaseError) {
+                                          System.out.println("The read failed: " + firebaseError.getMessage());
+                                      }
+                                  }
+
+        );
     }
 
     @Override
@@ -81,13 +117,16 @@ public class BaseActivity extends AppCompatActivity
         Fragment fragment = null;
         // Handle navigation view item clicks here.
         int id = item.getItemId();
+        Bundle bundle = new Bundle();
 
         if (id == R.id.nav_home) {
             fragment = new HomeFragment();
         } else if (id == R.id.nav_map) {
             fragment = new MapsFragment();
+            bundle.putParcelableArrayList("CAMP", camps);
         } else if (id == R.id.nav_camps) {
             fragment = new CampFragment();
+            bundle.putParcelable("CAMP", camps.get(2));
         } else if (id == R.id.nav_schedule) {
 
         } else if (id == R.id.nav_stats) {
@@ -96,6 +135,7 @@ public class BaseActivity extends AppCompatActivity
             fragment = new BadgeFragment();
         }
         if (fragment != null) {
+            fragment.setArguments(bundle);
             loadFragment(fragment);
         }
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);

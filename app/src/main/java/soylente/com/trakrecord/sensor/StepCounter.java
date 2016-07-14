@@ -21,20 +21,28 @@ public class StepCounter implements SensorEventListener {
     private Context mContext;
     private Sensor sensor;
     private int totalSteps;
+    private int previousSample;
 
     public StepCounter (Context c){
         mContext = c;
         mSensorManager = (SensorManager) mContext.getSystemService(SENSOR_SERVICE);
         sensor = mSensorManager.getDefaultSensor(Sensor.TYPE_STEP_COUNTER);
         totalSteps = 0;
+        previousSample = -1;
     }
 
-    public long getTotalSteps (){ return totalSteps; }
+    public int getTotalSteps (){ return totalSteps; }
+
+    public void setTotalSteps(int d){ totalSteps = d; }
 
     @Override
     public void onSensorChanged(SensorEvent event) {
-        totalSteps = (int)event.values[0];
+        if(previousSample != -1)
+            totalSteps += (int)event.values[0] - previousSample;
+
+        previousSample = (int)event.values[0];
         updateLabel(totalSteps);
+
     }
     private void updateLabel(int steps){
 

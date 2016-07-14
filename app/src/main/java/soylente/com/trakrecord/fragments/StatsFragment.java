@@ -6,6 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.TextView;
 import android.widget.ToggleButton;
@@ -47,9 +48,9 @@ public class StatsFragment extends Fragment {
 
         View view = inflater.inflate(R.layout.fragment_stats, container, false);
         steps = (TextView) view.findViewById(R.id.steps_label);
-        steps.setText("Steps: " + stepCounter.getTotalSteps());
         distance = (TextView) view.findViewById(R.id.distance_label);
-        distance.setText("Distance: " + distanceCalculator.getTotalDistance());
+
+        writeLabels();
 
         toggleReading = (ToggleButton) view.findViewById(R.id.toggle_reading);
         toggleReading.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -58,7 +59,22 @@ public class StatsFragment extends Fragment {
                 toggleReadings(isChecked);
             }
         });
+        Button resetButton = (Button) view.findViewById(R.id.reset_button);
+        resetButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                System.out.println("RESET");
+                stepCounter.setTotalSteps(0);
+                distanceCalculator.setTotalDistance(0);
+                writeLabels();
+            }
+        });
         return view;
+    }
+
+    private void writeLabels(){
+        steps.setText("Steps: " + stepCounter.getTotalSteps());
+        distance.setText("Distance: " + distanceCalculator.getTotalDistance());
     }
 
     private void toggleReadings(boolean isChecked) {

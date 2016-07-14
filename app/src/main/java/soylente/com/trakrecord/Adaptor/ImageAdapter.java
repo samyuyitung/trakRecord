@@ -19,8 +19,8 @@ import soylente.com.trakrecord.R;
  */
 public class ImageAdapter extends BaseAdapter {
     private Context mContext;
-    int notSelected = R.drawable.ic_media_pause;
-    int selected = R.drawable.ic_media_play;
+    int notSelected = R.drawable.ic_menu_camera;
+    int selected = R.drawable.ic_menu_send;
     Integer[] mThumbIds = {notSelected,
             notSelected,
             notSelected,

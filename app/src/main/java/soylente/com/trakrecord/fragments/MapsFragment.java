@@ -100,23 +100,6 @@ public class MapsFragment extends Fragment {
     }
 
     private void getCamps() {
-    /*        Firebase ref = new Firebase("https://trakrecord.firebaseio.com/Camps");
-        // Attach an listener to read the data at our posts reference
-
-        ref.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot snapshot) {
-                System.out.println("There are " + snapshot.getChildrenCount() + " camps");
-                for (DataSnapshot postSnapshot : snapshot.getChildren()) {
-                    camps.add(postSnapshot.getValue(Camp.class));
-                }
-            }
-
-            @Override
-            public void onCancelled(FirebaseError firebaseError) {
-                System.out.println("The read failed: " + firebaseError.getMessage());
-            }
-        });*/
 
         camps.add(new Camp("Home", 43.637141, -79.406711));
         camps.add(new Camp("1st", 43.650842, -79.373020));

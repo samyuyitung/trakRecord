@@ -5,136 +5,105 @@ package soylente.com.trakrecord.sensor;
  */
 
 import android.location.Location;
-import android.location.LocationListener;
-import android.location.LocationManager;
 import android.os.Bundle;
 import android.app.Activity;
 import android.content.Context;
-import android.util.Log;
 import android.widget.TextView;
+import android.widget.Toast;
 
-import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.LocationListener;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationServices;
 
 import soylente.com.trakrecord.R;
 
-import static android.content.Context.LOCATION_SERVICE;
 
-public class DistanceCalculator implements LocationListener {
+public class DistanceCalculator {
 
-    private LocationManager mLocationManager;
     private Context mContext;
     private double totalDistance;
     private Location previousLocation = null;
 
+    private GoogleApiClient mGoogleApiClient;
+    private LocationRequest mLocationRequest;
+
+    private long UPDATE_INTERVAL = 2000;  /* 10 secs */
+    private long FASTEST_INTERVAL = 100; /* 2 sec */
+
+    private LocationListener mLocationListener;
 
     public DistanceCalculator(Context c) {
         mContext = c;
-        mLocationManager = (LocationManager) mContext.getSystemService(LOCATION_SERVICE);
         totalDistance = 0;
+        mLocationListener = new LocationListener() {
+
+            @Override
+            public void onLocationChanged(Location currentLocation) {
+                if (currentLocation != null)
+                    totalDistance += previousLocation.distanceTo(currentLocation);
+
+                updateLabel(totalDistance);
+                previousLocation = currentLocation;
+            }
+        };
+
+        mGoogleApiClient = new GoogleApiClient.Builder(mContext)
+                .addApi(LocationServices.API)
+                .addConnectionCallbacks(new GoogleApiClient.ConnectionCallbacks() {
+
+                    @Override
+                    public void onConnected(Bundle arg0) {
+                        // Get last known recent location.
+                        try {
+                            previousLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
+                            startLocationUpdates();
+                        } catch (SecurityException e) {
+                        }
+                    }
+
+                    @Override
+                    public void onConnectionSuspended(int i) {
+
+                    }
+                }).build();
+
     }
 
     public double getTotalDistance() {
         return totalDistance;
     }
 
-    public LatLng getCurrentCoords() {
-        return new LatLng(previousLocation.getLatitude(), previousLocation.getLongitude());
+    public void setTotalDistance(double d) {
+        totalDistance = d;
     }
 
-    private void updateLabel(Double distance) {
 
+    private void updateLabel(Double distance) {
         TextView txtView = (TextView) ((Activity) mContext).findViewById(R.id.distance_label);
         txtView.setText("Distance: " + String.format("%.2f", distance) + "m");
     }
 
-    @Override
-    public void onLocationChanged(Location currentLocation) {
-        if (currentLocation != null)
-            totalDistance += previousLocation.distanceTo(currentLocation);
-        updateLabel(totalDistance);
-        previousLocation = currentLocation;
+    protected void startLocationUpdates() throws SecurityException {
+        // Create the location request
+        mLocationRequest = LocationRequest.create()
+                .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
+                .setInterval(UPDATE_INTERVAL)
+                .setFastestInterval(FASTEST_INTERVAL);
+        // Request location updates
+        LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient,
+                mLocationRequest, mLocationListener);
     }
-
-    @Override
-    public void onProviderDisabled(String arg0) {
-        // TODO Auto-generated method stub
-
-    }
-
-    @Override
-    public void onProviderEnabled(String arg0) {
-        // TODO Auto-generated method stub
-
-    }
-
-    @Override
-    public void onStatusChanged(String arg0, int arg1, Bundle arg2) {
-        // TODO Auto-generated method stub
-
-    }
-
 
     public void start() {
-        try {
-            mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this);
-            previousLocation = getLocation();
-        } catch (SecurityException e) {
-            e.printStackTrace();
-        }
+        mGoogleApiClient.connect();
     }
 
     public void stop() {
-        try {
-            mLocationManager.removeUpdates(this);
-        } catch (SecurityException e) {
-            e.printStackTrace();
-        }
+        LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, mLocationListener);
+
+        if (mGoogleApiClient != null)
+            mGoogleApiClient.disconnect();
+
     }
-
-
-    public Location getLocation() {
-        Location location = null;
-        try {
-            // getting GPS status
-            boolean isGPSEnabled = mLocationManager
-                    .isProviderEnabled(LocationManager.GPS_PROVIDER);
-
-            // getting network status
-            boolean isNetworkEnabled = mLocationManager
-                    .isProviderEnabled(LocationManager.NETWORK_PROVIDER);
-
-            if (!isGPSEnabled && !isNetworkEnabled) {
-                // no network provider is enabled
-            } else {
-                if (isNetworkEnabled) {
-                    mLocationManager.requestLocationUpdates(
-                            LocationManager.NETWORK_PROVIDER,
-                            1000,
-                            1, this);
-                    Log.d("Network", "Network Enabled");
-                    if (mLocationManager != null) {
-                        location = mLocationManager
-                                .getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
-
-                    }
-                }
-                // if GPS Enabled get lat/long using GPS Services
-                if (isGPSEnabled) {
-                    if (location == null) {
-                        Log.d("GPS", "GPS Enabled");
-                        if (mLocationManager != null)
-                            location = mLocationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-
-                    }
-                }
-            }
-
-        } catch (SecurityException e) {
-            e.printStackTrace();
-        }
-
-        return location;
-    }
-
-
 }
