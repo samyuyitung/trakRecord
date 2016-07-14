@@ -5,8 +5,6 @@ import android.os.Parcelable;
 
 import com.google.android.gms.maps.model.LatLng;
 
-import java.io.Serializable;
-
 /**
  * Created by sam on 2016-06-02.
  */

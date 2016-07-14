@@ -1,15 +1,26 @@
 package soylente.com.trakrecord.estimote;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.estimote.sdk.Beacon;
 import com.estimote.sdk.Region;
+import com.google.android.gms.maps.model.LatLng;
 
 import java.util.UUID;
 
-public class BeaconID {
+import soylente.com.trakrecord.DAO.Camp;
+
+public class BeaconID implements Parcelable {
 
     private UUID proximityUUID;
     private int major;
     private int minor;
+
+
+    public BeaconID () {
+
+    }
 
     public static BeaconID fromBeacon(Beacon beacon) {
         return new BeaconID(beacon.getProximityUUID(), beacon.getMajor(), beacon.getMinor());
@@ -24,6 +35,7 @@ public class BeaconID {
     public BeaconID(String UUIDString, int major, int minor) {
         this(UUID.fromString(UUIDString), major, minor);
     }
+
     public UUID getProximityUUID() {
         return proximityUUID;
     }
@@ -69,4 +81,36 @@ public class BeaconID {
                 && getMajor() == other.getMajor()
                 && getMinor() == other.getMinor();
     }
+
+
+    protected BeaconID(Parcel in) {
+        proximityUUID = (UUID) in.readValue(UUID.class.getClassLoader());
+        major = in.readInt();
+        minor = in.readInt();
+         }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeValue(proximityUUID);
+        dest.writeInt(major);
+        dest.writeInt(minor);
+
+    }
+    @SuppressWarnings("unused")
+    public static final Parcelable.Creator<BeaconID> CREATOR = new Parcelable.Creator<BeaconID>() {
+        @Override
+        public BeaconID createFromParcel(Parcel in) {
+            return new BeaconID(in);
+        }
+
+        @Override
+        public BeaconID[] newArray(int size) {
+            return new BeaconID[size];
+        }
+    };
 }

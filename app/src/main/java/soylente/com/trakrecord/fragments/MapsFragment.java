@@ -3,6 +3,7 @@ package soylente.com.trakrecord.fragments;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +14,7 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
 
@@ -26,10 +28,16 @@ public class MapsFragment extends Fragment {
 
     MapView mMapView;
     private GoogleMap googleMap;
-    List<Camp> camps = new ArrayList<>();
+    ArrayList<Camp> camps;
     private float[] pinColours = {BitmapDescriptorFactory.HUE_BLUE, BitmapDescriptorFactory.HUE_CYAN, BitmapDescriptorFactory.HUE_GREEN, BitmapDescriptorFactory.HUE_MAGENTA, BitmapDescriptorFactory.HUE_RED, BitmapDescriptorFactory.HUE_ROSE, BitmapDescriptorFactory.HUE_VIOLET, BitmapDescriptorFactory.HUE_YELLOW};
     private int[] routeColours = {Color.BLUE, Color.CYAN, Color.GREEN, Color.MAGENTA, Color.RED};
 
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        camps = getArguments().getParcelableArrayList("CAMPS");
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -78,7 +86,6 @@ public class MapsFragment extends Fragment {
     }
 
     private void populateMap(GoogleMap googleMap) {
-        getCamps();
         if (!camps.isEmpty()) {
             for (Camp c : camps) {
                 googleMap.addMarker(new MarkerOptions()
@@ -95,16 +102,27 @@ public class MapsFragment extends Fragment {
             }
             googleMap.moveCamera(CameraUpdateFactory.zoomTo(14));
             googleMap.moveCamera(CameraUpdateFactory.newLatLng(camps.get(0).getCoords()));
+            googleMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
 
+                @Override
+                public void onInfoWindowClick(Marker arg0) {
+                    Bundle bundle = new Bundle();
+                    CampFragment campFrag = new CampFragment();
+                    for (Camp c : camps )
+                        if(c.getCampName().equals(arg0.getTitle())) {
+                            bundle.putParcelable("CAMP", c);
+                            campFrag.setArguments(bundle);
+                            break;
+                        }
+
+                    FragmentManager fragmentManager = getFragmentManager();
+                    fragmentManager.beginTransaction()
+                            .replace(R.id.content_frame, campFrag)
+                            .addToBackStack(null)
+                            .commit();
+                }
+            });
         }
     }
 
-    private void getCamps() {
-
-        camps.add(new Camp("Home", 43.637141, -79.406711));
-        camps.add(new Camp("1st", 43.650842, -79.373020));
-        camps.add(new Camp("2nd", 43.663394, -79.391790));
-        camps.add(new Camp("3nd", 43.662827, -79.409837));
-        camps.add(new Camp("4nd", 43.647667, -79.414318));
-    }
 }

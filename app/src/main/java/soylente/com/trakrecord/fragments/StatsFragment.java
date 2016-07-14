@@ -63,7 +63,6 @@ public class StatsFragment extends Fragment {
         resetButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                System.out.println("RESET");
                 stepCounter.setTotalSteps(0);
                 distanceCalculator.setTotalDistance(0);
                 writeLabels();

@@ -24,6 +24,7 @@ import java.util.List;
 import soylente.com.trakrecord.DAO.Camp;
 import soylente.com.trakrecord.R;
 
+import soylente.com.trakrecord.estimote.BeaconID;
 import soylente.com.trakrecord.fragments.BadgeFragment;
 import soylente.com.trakrecord.fragments.CampFragment;
 import soylente.com.trakrecord.fragments.HomeFragment;
@@ -34,6 +35,8 @@ public class BaseActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     ArrayList<Camp> camps = new ArrayList<>();
+    ArrayList<BeaconID> beacons = new ArrayList<>();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -63,7 +66,6 @@ public class BaseActivity extends AppCompatActivity
         ref.addValueEventListener(new ValueEventListener() {
                                       @Override
                                       public void onDataChange(DataSnapshot snapshot) {
-                                          System.out.println("There are " + snapshot.getChildrenCount() + " camps");
                                           for (DataSnapshot postSnapshot : snapshot.getChildren()) {
                                               camps.add(postSnapshot.getValue(Camp.class));
 
@@ -77,13 +79,32 @@ public class BaseActivity extends AppCompatActivity
                                   }
 
         );
-    }
+        ref = new Firebase("https://trakrecord.firebaseio.com/Beacons");
+        ref.addValueEventListener(new ValueEventListener() {
+                                      @Override
+                                      public void onDataChange(DataSnapshot snapshot) {
+                                          for (DataSnapshot postSnapshot : snapshot.getChildren()) {
+                                              beacons.add(postSnapshot.getValue(BeaconID.class));
+
+                                          }
+                                      }
+
+                                      @Override
+                                      public void onCancelled(FirebaseError firebaseError) {
+                                          System.out.println("The read failed: " + firebaseError.getMessage());
+                                      }
+                                  }
+
+        );    }
 
     @Override
     public void onBackPressed() {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        FragmentManager fm = getSupportFragmentManager();
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
+        } else if (fm.getBackStackEntryCount() > 0) {
+            fm.popBackStack();
         } else {
             super.onBackPressed();
         }
@@ -123,16 +144,18 @@ public class BaseActivity extends AppCompatActivity
             fragment = new HomeFragment();
         } else if (id == R.id.nav_map) {
             fragment = new MapsFragment();
-            bundle.putParcelableArrayList("CAMP", camps);
-        } else if (id == R.id.nav_camps) {
+            bundle.putParcelableArrayList("CAMPS", camps);
+        }/* else if (id == R.id.nav_camps) {
             fragment = new CampFragment();
-            bundle.putParcelable("CAMP", camps.get(2));
-        } else if (id == R.id.nav_schedule) {
+            bundle.putParcelable("CAMP", camps.get(2));}*/
+        else if (id == R.id.nav_schedule) {
 
         } else if (id == R.id.nav_stats) {
             fragment = new StatsFragment();
         } else if (id == R.id.nav_badges) {
             fragment = new BadgeFragment();
+            bundle.putParcelableArrayList("CAMPS", camps);
+            bundle.putParcelableArrayList("BEACONS", beacons);
         }
         if (fragment != null) {
             fragment.setArguments(bundle);
@@ -148,6 +171,7 @@ public class BaseActivity extends AppCompatActivity
         FragmentManager fragmentManager = getSupportFragmentManager();
         fragmentManager.beginTransaction()
                 .replace(R.id.content_frame, fragment)
+                .addToBackStack(null)
                 .commit();
 
     }

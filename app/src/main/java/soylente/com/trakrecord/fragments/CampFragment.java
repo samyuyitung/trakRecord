@@ -30,8 +30,8 @@ public class CampFragment extends Fragment implements OnMapReadyCallback {
     private MapView campMap;
     private Camp camp;
     private Location campLoc;
-    TextView distanceFrom;
-
+    private TextView distanceFrom;
+    private boolean locationScanning = false;
     private GoogleApiClient mGoogleApiClient;
     private LocationRequest mLocationRequest;
     private com.google.android.gms.location.LocationListener mLocationListener;
@@ -85,6 +85,7 @@ public class CampFragment extends Fragment implements OnMapReadyCallback {
         // Request location updates
         LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient,
                 mLocationRequest, mLocationListener);
+        locationScanning = true;
     }
 
     @Override
@@ -130,9 +131,9 @@ public class CampFragment extends Fragment implements OnMapReadyCallback {
     @Override
     public void onPause(){
         super.onPause();
-
-        LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, mLocationListener);
-
+        if(locationScanning) {
+            LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, mLocationListener);
+        }
         if (mGoogleApiClient != null)
             mGoogleApiClient.disconnect();
 
