@@ -19,7 +19,6 @@ import soylente.com.trakrecord.Adaptor.ImageAdapter;
 import soylente.com.trakrecord.DAO.Camp;
 import soylente.com.trakrecord.R;
 import soylente.com.trakrecord.estimote.BeaconID;
-import soylente.com.trakrecord.estimote.BeaconStats;
 import soylente.com.trakrecord.estimote.EstimoteCloudBeaconDetails;
 import soylente.com.trakrecord.estimote.EstimoteCloudBeaconDetailsFactory;
 import soylente.com.trakrecord.estimote.ProximityContentManager;

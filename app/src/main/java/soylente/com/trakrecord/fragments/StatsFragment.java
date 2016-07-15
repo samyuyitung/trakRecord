@@ -32,8 +32,6 @@ public class StatsFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         stepCounter = new StepCounter(getActivity());
-        distanceCalculator = new DistanceCalculator(getActivity());
-
     }
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {

@@ -22,9 +22,10 @@ public class StepCounter implements SensorEventListener {
     private Sensor sensor;
     private int totalSteps;
     private int previousSample;
-
+    DistanceCalculator dc;
     public StepCounter (Context c){
         mContext = c;
+        dc = new DistanceCalculator(mContext);
         mSensorManager = (SensorManager) mContext.getSystemService(SENSOR_SERVICE);
         sensor = mSensorManager.getDefaultSensor(Sensor.TYPE_STEP_COUNTER);
         totalSteps = 0;
@@ -41,13 +42,15 @@ public class StepCounter implements SensorEventListener {
             totalSteps += (int)event.values[0] - previousSample;
 
         previousSample = (int)event.values[0];
-        updateLabel(totalSteps);
+        updateLabel(totalSteps,  dc.getTotalDistance());
 
     }
-    private void updateLabel(int steps){
+    private void updateLabel(int steps, double distance){
 
-        TextView txtView = (TextView) ((Activity)mContext).findViewById(R.id.steps_label);
-        txtView.setText("Walked: " + steps + " Steps");
+        TextView txtView1 = (TextView) ((Activity)mContext).findViewById(R.id.steps_label);
+        TextView txtView2 = (TextView) ((Activity)mContext).findViewById(R.id.distance_label);
+        txtView1.setText("Walked: " + steps + " Steps");
+        txtView2.setText("Distance: " + String.format("%.2f", distance) + "m");
     }
 
     @Override

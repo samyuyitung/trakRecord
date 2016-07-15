@@ -43,8 +43,6 @@ public class DistanceCalculator {
             public void onLocationChanged(Location currentLocation) {
                 if (currentLocation != null)
                     totalDistance += previousLocation.distanceTo(currentLocation);
-
-                updateLabel(totalDistance);
                 previousLocation = currentLocation;
             }
         };

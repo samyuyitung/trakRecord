@@ -68,7 +68,7 @@ public class BaseActivity extends AppCompatActivity
                                       public void onDataChange(DataSnapshot snapshot) {
                                           for (DataSnapshot postSnapshot : snapshot.getChildren()) {
                                               camps.add(postSnapshot.getValue(Camp.class));
-                                              beacons.add(new BeaconID(camps.get(camps.size() - 1).getBeaconID(), 23105, 37595));
+                                              beacons.add(new BeaconID("B9407F30-F5F8-466E-AFF9-25556B57FE6D", camps.get(camps.size() -1).getBeaconMajor(), camps.get(camps.size() -1).getBeaconMinor()));
                                           }
                                       }
 
