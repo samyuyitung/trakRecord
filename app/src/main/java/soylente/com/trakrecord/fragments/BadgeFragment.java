@@ -112,5 +112,6 @@ public class BadgeFragment extends Fragment implements View.OnClickListener, Pro
     private void unlockCamp(int campNumber) {
         iAdaptor.updateImage(campNumber, 1);
         iAdaptor.notifyDataSetChanged();
+        campList.get(campNumber).setFound(true);
     }
 }

@@ -23,6 +23,14 @@
         android:id="@+id/camp_distance_label"
         android:textSize="20dp" />
 
+    <TextView
+        android:text="TextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/found_label"
+        android:textSize="20dp" />
+
+
     <com.google.android.gms.maps.MapView
         android:padding="60dp"
         android:layout_width="match_parent"

@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -36,8 +37,8 @@ public class CampFragment extends Fragment implements OnMapReadyCallback {
     private LocationRequest mLocationRequest;
     private com.google.android.gms.location.LocationListener mLocationListener;
 
-    private long UPDATE_INTERVAL = 2000;  /* 10 secs */
-    private long FASTEST_INTERVAL = 100; /* 2 sec */
+    private long UPDATE_INTERVAL = 2000;
+    private long FASTEST_INTERVAL = 100;
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -51,6 +52,7 @@ public class CampFragment extends Fragment implements OnMapReadyCallback {
             @Override
             public void onLocationChanged(Location currentLocation) {
                 mLocation = currentLocation;
+                setDistanceFrom();
             }
         };
 
@@ -100,12 +102,13 @@ public class CampFragment extends Fragment implements OnMapReadyCallback {
 
         View view = inflater.inflate(R.layout.fragment_camp, container, false);
         TextView title = (TextView) view.findViewById(R.id.camp_title);
-        distanceFrom = (TextView) view.findViewById(R.id.distance_label);
         title.setText(camp.getCampName());
+        distanceFrom = (TextView) view.findViewById(R.id.camp_distance_label);
+        TextView foundLabel = (TextView) view.findViewById(R.id.found_label);
+        setFoundLabel(foundLabel);
         campMap = (MapView) view.findViewById(R.id.camp_view);
         campMap.onCreate(savedInstanceState);
         campMap.getMapAsync(this);
-        setDistanceFrom();
 
         return view;
 
@@ -121,11 +124,22 @@ public class CampFragment extends Fragment implements OnMapReadyCallback {
         campMap.onResume();
     }
 
+    void setFoundLabel(TextView txt) {
+        String s;
+        if(camp.getIsFound())
+            s = "YOU FOUND THIS!!!!!!!!!!!!!!!!";
+        else
+            s = "NAH, AIN'T FOUND YET";
+        txt.setText(s);
+    }
+
     void setDistanceFrom() {
-        float distance = -12;
+        float distance = -1;
         if (mLocation != null && camp.getCoords() != null)
             distance = mLocation.distanceTo(campLoc) / 1000;
-       // distanceFrom.setText("Distance from: " + distance + " km");
+        if(distance != -1 && distanceFrom != null && this.isVisible()) {
+            distanceFrom.setText("Distance from: " + String.format("%.2f", distance) + " km");
+        }
     }
 
     @Override

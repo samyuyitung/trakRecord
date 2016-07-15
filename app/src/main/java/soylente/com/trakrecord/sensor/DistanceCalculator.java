@@ -8,6 +8,7 @@ import android.location.Location;
 import android.os.Bundle;
 import android.app.Activity;
 import android.content.Context;
+import android.support.v4.app.FragmentManager;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -80,8 +81,10 @@ public class DistanceCalculator {
 
 
     private void updateLabel(Double distance) {
+        //ONLY UPDATE IF ACTIVE!
         TextView txtView = (TextView) ((Activity) mContext).findViewById(R.id.distance_label);
-        txtView.setText("Distance: " + String.format("%.2f", distance) + "m");
+        if (txtView != null)
+            txtView.setText("Distance: " + String.format("%.2f", distance) + "m");
     }
 
     protected void startLocationUpdates() throws SecurityException {

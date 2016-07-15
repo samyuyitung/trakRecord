@@ -15,7 +15,7 @@ public class Camp implements Parcelable {
     private double latitude;
     private double longitude;
     private LatLng coords;
-
+    private boolean isFound;
     public Camp() {
 
     }
@@ -25,6 +25,7 @@ public class Camp implements Parcelable {
         latitude = lat;
         longitude = lng;
         coords = new LatLng(latitude, longitude);
+        isFound = false;
     }
 
 
@@ -39,6 +40,11 @@ public class Camp implements Parcelable {
     public double getLongitude() {
         return longitude;
     }
+    public boolean getIsFound(){return isFound; }
+    public void setFound(boolean f){
+        isFound = f;
+    }
+
 
 
     public LatLng getCoords() {

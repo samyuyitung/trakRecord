@@ -76,6 +76,7 @@ public class MapsFragment extends Fragment {
     @Override
     public void onDestroy() {
         super.onDestroy();
+        if(mMapView != null)
         mMapView.onDestroy();
     }
 
@@ -108,8 +109,8 @@ public class MapsFragment extends Fragment {
                 public void onInfoWindowClick(Marker arg0) {
                     Bundle bundle = new Bundle();
                     CampFragment campFrag = new CampFragment();
-                    for (Camp c : camps )
-                        if(c.getCampName().equals(arg0.getTitle())) {
+                    for (Camp c : camps)
+                        if (c.getCampName().equals(arg0.getTitle())) {
                             bundle.putParcelable("CAMP", c);
                             campFrag.setArguments(bundle);
                             break;
@@ -122,6 +123,11 @@ public class MapsFragment extends Fragment {
                             .commit();
                 }
             });
+            try {
+                googleMap.setMyLocationEnabled(true);
+            } catch (SecurityException e) {
+
+            }
         }
     }
 
