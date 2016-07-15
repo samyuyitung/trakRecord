@@ -2,14 +2,12 @@ package soylente.com.trakrecord.fragments;
 
 
 import android.location.Location;
-import android.location.LocationListener;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
 
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -43,7 +41,7 @@ public class CampFragment extends Fragment implements OnMapReadyCallback {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         camp = (Camp) getArguments().getParcelable("CAMP");
-        campLoc = new Location("");
+            campLoc = new Location("");
         campLoc.setLatitude(camp.getLatitude());
         campLoc.setLongitude(camp.getLongitude());
 
@@ -124,6 +122,7 @@ public class CampFragment extends Fragment implements OnMapReadyCallback {
         campMap.onResume();
     }
 
+    //Convert to Image (badge)
     void setFoundLabel(TextView txt) {
         String s;
         if(camp.getIsFound())

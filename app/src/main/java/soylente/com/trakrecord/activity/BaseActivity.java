@@ -68,7 +68,7 @@ public class BaseActivity extends AppCompatActivity
                                       public void onDataChange(DataSnapshot snapshot) {
                                           for (DataSnapshot postSnapshot : snapshot.getChildren()) {
                                               camps.add(postSnapshot.getValue(Camp.class));
-
+                                              beacons.add(new BeaconID(camps.get(camps.size() - 1).getBeaconID(), 23105, 37595));
                                           }
                                       }
 
@@ -79,7 +79,7 @@ public class BaseActivity extends AppCompatActivity
                                   }
 
         );
-        ref = new Firebase("https://trakrecord.firebaseio.com/Beacons");
+/*        ref = new Firebase("https://trakrecord.firebaseio.com/Beacons");
         ref.addValueEventListener(new ValueEventListener() {
                                       @Override
                                       public void onDataChange(DataSnapshot snapshot) {
@@ -95,7 +95,8 @@ public class BaseActivity extends AppCompatActivity
                                       }
                                   }
 
-        );    }
+        );    */
+    }
 
     @Override
     public void onBackPressed() {
@@ -145,10 +146,7 @@ public class BaseActivity extends AppCompatActivity
         } else if (id == R.id.nav_map) {
             fragment = new MapsFragment();
             bundle.putParcelableArrayList("CAMPS", camps);
-        }/* else if (id == R.id.nav_camps) {
-            fragment = new CampFragment();
-            bundle.putParcelable("CAMP", camps.get(2));}*/
-        else if (id == R.id.nav_schedule) {
+        } else if (id == R.id.nav_schedule) {
 
         } else if (id == R.id.nav_stats) {
             fragment = new StatsFragment();

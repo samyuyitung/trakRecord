@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.GridView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 
@@ -27,7 +28,7 @@ import soylente.com.trakrecord.estimote.ProximityContentManager;
 public class BadgeFragment extends Fragment implements View.OnClickListener, ProximityContentManager.Listener {
     private ProximityContentManager proximityContentManager;
 
-    private ImageAdapter iAdaptor;
+    private ImageAdapter iAdaptor = null;
     private BluetoothAdapter mBluetoothAdapter;
     private FragmentManager fragmentManager;
     private ArrayList<BeaconID> beaconsList;
@@ -37,8 +38,8 @@ public class BadgeFragment extends Fragment implements View.OnClickListener, Pro
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
-        beaconsList = getArguments().getParcelableArrayList("BEACONS");
         campList = getArguments().getParcelableArrayList("CAMPS");
+        beaconsList = getArguments().getParcelableArrayList("BEACONS");
     }
 
     @Override
@@ -48,11 +49,13 @@ public class BadgeFragment extends Fragment implements View.OnClickListener, Pro
         Button scanButton = (Button) view.findViewById(R.id.scanButton);
         scanButton.setOnClickListener(this);
 
-        if (!beaconsList.isEmpty())
+        if (!beaconsList.isEmpty()) {
             proximityContentManager = new ProximityContentManager(this.getActivity(), beaconsList,
                     new EstimoteCloudBeaconDetailsFactory());
-        proximityContentManager.setListener(this);
-        iAdaptor = new ImageAdapter(view.getContext());
+            proximityContentManager.setListener(this);
+        }
+        if (iAdaptor == null)
+            iAdaptor = new ImageAdapter(view.getContext());
 
         GridView gridView = (GridView) view.findViewById(R.id.badgeGrid);
         gridView.setAdapter(iAdaptor); // uses the view to get the context instead of getActivity().
@@ -61,7 +64,7 @@ public class BadgeFragment extends Fragment implements View.OnClickListener, Pro
             @Override
             public void onItemClick(AdapterView<?> parent, View v, int position,
                                     long id) {
-                if (campList.size() >= position) {
+                if (campList.size() > position) {
                     Bundle bundle = new Bundle();
                     CampFragment campFrag = new CampFragment();
                     bundle.putParcelable("CAMP", campList.get(position));
@@ -78,6 +81,11 @@ public class BadgeFragment extends Fragment implements View.OnClickListener, Pro
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+    }
+
+    @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
@@ -85,9 +93,10 @@ public class BadgeFragment extends Fragment implements View.OnClickListener, Pro
 
     private void startScanning() {
 
-        if (mBluetoothAdapter != null && mBluetoothAdapter.isEnabled())
+        if (mBluetoothAdapter != null && mBluetoothAdapter.isEnabled()) {
             proximityContentManager.startContentUpdates();
-        unlockCamp(2);
+            Toast.makeText(getActivity(), "starting beacons", Toast.LENGTH_SHORT).show();
+        }
     }
 
 
@@ -101,11 +110,13 @@ public class BadgeFragment extends Fragment implements View.OnClickListener, Pro
 
         if (content != null) {
             EstimoteCloudBeaconDetails beaconDetails = (EstimoteCloudBeaconDetails) content;
-            BeaconStats bs = new BeaconStats();
-            //Read beacon info
-            bs = bs.grabById(beaconDetails.getId());
-            unlockCamp(bs.getCampNumber());
-            proximityContentManager.stopContentUpdates();
+            for (Camp c : campList) {
+                if (c.getBeaconID() == beaconDetails.getId()) {
+                    unlockCamp(c.getCampNumber());
+                    //Stop scanning for beacons
+                    proximityContentManager.stopContentUpdates();
+                }
+            }
         }
     }
 
