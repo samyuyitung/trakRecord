@@ -19,7 +19,11 @@ import com.google.android.gms.location.LocationServices;
 
 import soylente.com.trakrecord.R;
 
-
+/**
+ * @deprecated
+ * merged with step counter
+ * Only update on step count (prevent distances by other means)
+ */
 public class DistanceCalculator {
 
     private Context mContext;

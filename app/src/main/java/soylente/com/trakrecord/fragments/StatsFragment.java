@@ -32,6 +32,7 @@ public class StatsFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         stepCounter = new StepCounter(getActivity());
+//        distanceCalculator = new DistanceCalculator(getActivity());
     }
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
@@ -49,7 +50,6 @@ public class StatsFragment extends Fragment {
         distance = (TextView) view.findViewById(R.id.distance_label);
 
         writeLabels();
-
         toggleReading = (ToggleButton) view.findViewById(R.id.toggle_reading);
         toggleReading.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
@@ -71,7 +71,6 @@ public class StatsFragment extends Fragment {
 
     private void writeLabels(){
         steps.setText("Steps: " + stepCounter.getTotalSteps());
-        distance.setText("Distance: " + distanceCalculator.getTotalDistance());
     }
 
     private void toggleReadings(boolean isChecked) {

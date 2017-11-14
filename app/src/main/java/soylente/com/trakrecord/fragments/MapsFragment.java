@@ -7,24 +7,23 @@ import android.support.v4.app.FragmentManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.RelativeLayout;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.MapsInitializer;
+import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import soylente.com.trakrecord.DAO.Camp;
 import soylente.com.trakrecord.R;
 
-public class MapsFragment extends Fragment {
+public class MapsFragment extends Fragment implements OnMapReadyCallback{
 
     MapView mMapView;
     private GoogleMap googleMap;
@@ -56,11 +55,14 @@ public class MapsFragment extends Fragment {
             e.printStackTrace();
         }
 
-        googleMap = mMapView.getMap();
-        populateMap(googleMap);
+        mMapView.getMapAsync(this);
         return v;
     }
 
+    @Override
+    public void onMapReady(GoogleMap googleMap){
+        populateMap(googleMap);
+    }
     @Override
     public void onResume() {
         super.onResume();

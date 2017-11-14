@@ -13,6 +13,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 
+import com.estimote.sdk.EstimoteSDK;
 import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
@@ -39,6 +40,7 @@ public class BaseActivity extends AppCompatActivity
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        EstimoteSDK.initialize(this, "trakrecord-mpb", "2a57942b1ba8a5544a933d896f42e3ff");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_base);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -68,7 +70,7 @@ public class BaseActivity extends AppCompatActivity
                                       public void onDataChange(DataSnapshot snapshot) {
                                           for (DataSnapshot postSnapshot : snapshot.getChildren()) {
                                               camps.add(postSnapshot.getValue(Camp.class));
-                                              beacons.add(new BeaconID("B9407F30-F5F8-466E-AFF9-25556B57FE6D", camps.get(camps.size() -1).getBeaconMajor(), camps.get(camps.size() -1).getBeaconMinor()));
+                                              beacons.add(new BeaconID(camps.get(camps.size() - 1).getBeaconID(), camps.get(camps.size() -1).getBeaconMajor(), camps.get(camps.size() -1).getBeaconMinor()));
                                           }
                                       }
 

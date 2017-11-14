@@ -6,6 +6,7 @@ import android.os.Parcelable;
 import com.google.android.gms.maps.model.LatLng;
 
 import java.util.ArrayList;
+import java.util.UnknownFormatConversionException;
 
 /**
  * Created by sam on 2016-07-14.
@@ -22,7 +23,7 @@ public class User implements Parcelable {
     public User(String name) {
         this.name = name;
         foundCamps = new ArrayList<>();
-        for(int i = 0; i < 10; i++)
+        for (int i = 0; i < 10; i++)
             foundCamps.add(false);
     }
 
@@ -37,7 +38,8 @@ public class User implements Parcelable {
 
     protected User(Parcel in) {
         name = in.readString();
-        foundCamps =  in.readArrayList(Boolean.class.getClassLoader());
+        foundCamps = in.readArrayList(Boolean.class.getClassLoader());
+
     }
 
     @Override

@@ -94,7 +94,6 @@ public class BadgeFragment extends Fragment implements View.OnClickListener, Pro
 
         if (mBluetoothAdapter != null && mBluetoothAdapter.isEnabled()) {
             proximityContentManager.startContentUpdates();
-            Toast.makeText(getActivity(), "starting beacons", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -106,13 +105,11 @@ public class BadgeFragment extends Fragment implements View.OnClickListener, Pro
 
     @Override
     public void onContentChanged(Object content) {
-
         if (content != null) {
             EstimoteCloudBeaconDetails beaconDetails = (EstimoteCloudBeaconDetails) content;
             for (Camp c : campList) {
-                if (c.getBeaconID() == beaconDetails.getId()) {
+                if (c.getBeaconID().toString().equals(beaconDetails.getId().toString())) {
                     unlockCamp(c.getCampNumber());
-                    //Stop scanning for beacons
                     proximityContentManager.stopContentUpdates();
                 }
             }
@@ -123,5 +120,6 @@ public class BadgeFragment extends Fragment implements View.OnClickListener, Pro
         iAdaptor.updateImage(campNumber, 1);
         iAdaptor.notifyDataSetChanged();
         campList.get(campNumber).setFound(true);
+        Toast.makeText(getActivity(), "YOU FOUND IT.... NICE!", Toast.LENGTH_SHORT).show();
     }
 }

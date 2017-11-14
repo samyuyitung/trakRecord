@@ -27,7 +27,7 @@ public class Camp implements Parcelable {
 
     }
 
-    public Camp(String name, int num, double lat, double lng, int major, int minor, UUID id){
+    public Camp(String name, int num, double lat, double lng, int major, int minor, UUID id) {
         campName = name;
         campNumber = num;
         latitude = lat;
@@ -43,7 +43,11 @@ public class Camp implements Parcelable {
     public String getCampName() {
         return campName;
     }
-    public int getCampNumber() { return  campNumber; }
+
+    public int getCampNumber() {
+        return campNumber;
+    }
+
     public double getLatitude() {
         return latitude;
     }
@@ -51,18 +55,30 @@ public class Camp implements Parcelable {
     public double getLongitude() {
         return longitude;
     }
-    public boolean getIsFound(){return isFound; }
 
-    public UUID getBeaconID(){ return beaconID; }
-    public int getBeaconMajor(){ return beaconMajor; }
-    public int getBeaconMinor(){ return  beaconMinor; }
-
-
-
-    public void setFound(boolean f){
-        isFound = f;
+    public boolean getIsFound() {
+        return isFound;
     }
 
+    public UUID getBeaconID() {
+        if (beaconID != null)
+            return beaconID;
+        else
+            return UUID.randomUUID();
+    }
+
+    public int getBeaconMajor() {
+        return beaconMajor;
+    }
+
+    public int getBeaconMinor() {
+        return beaconMinor;
+    }
+
+
+    public void setFound(boolean f) {
+        isFound = f;
+    }
 
 
     public LatLng getCoords() {
@@ -98,6 +114,7 @@ public class Camp implements Parcelable {
         dest.writeInt(beaconMajor);
         dest.writeInt(beaconMinor);
     }
+
     @SuppressWarnings("unused")
     public static final Parcelable.Creator<Camp> CREATOR = new Parcelable.Creator<Camp>() {
         @Override
